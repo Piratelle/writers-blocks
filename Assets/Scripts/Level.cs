@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /**
  * A MonoBehaviour class representing the grid of a game level.
@@ -9,9 +10,7 @@ using UnityEngine.Tilemaps;
  */
 public class Level : MonoBehaviour
 {
-    public Tilemap tilemap { get; private set; }
-    public Tetromino activePiece { get; private set; }
-    public Tetromino.Data[] tetrominoes;
+    public Tetromino.Data[] tetrominos;
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public Vector2Int gridSize = new Vector2Int(10, 20);
     public RectInt Bounds
@@ -22,6 +21,11 @@ public class Level : MonoBehaviour
             return new RectInt(position, gridSize);
         }
     }
+
+    private Tilemap tilemap;
+    private Tetromino activePiece;
+    private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
+    private int lastCleared = 0;
 
     /**
      * Called when the scene is loaded.
@@ -44,8 +48,18 @@ public class Level : MonoBehaviour
      */
     public void SpawnPiece()
     {
-        int random = Random.Range(0, this.tetrominoes.Length);
-        Tetromino.Data data = this.tetrominoes[random];
+        // avoid too many repeats by using "7-bag" technique
+        if (tetrominoBag.Count == 0)
+        {
+            for (int i = 0; i < tetrominos.Length; i++)
+            {
+                tetrominoBag.Add(tetrominos[i]);
+            }
+        }
+
+        int random = Random.Range(0, tetrominoBag.Count);
+        Tetromino.Data data = tetrominoBag[random];
+        tetrominoBag.RemoveAt(random);
 
         this.activePiece = gameObject.AddComponent<Tetromino>() as Tetromino;
         this.activePiece.Initialize(this, this.spawnPosition, data);
@@ -124,26 +138,22 @@ public class Level : MonoBehaviour
     {
         RectInt bounds = this.Bounds;
         int row = bounds.yMin;
-        int inARow = 0;
+        int count = 0;
 
         while (row < bounds.yMax)
         {
             if (IsLineFull(row))
             {
                 ClearLine(row);
-                inARow++;
-                if (inARow == 4)
-                {
-                    //TETRIS bonus!
-                    inARow = 0;
-                } 
-                // single-line score
+                count++;
             } else
             {
                 row++;
-                inARow = 0;
             }
         }
+
+        // points = GetPoints(count);
+        if (count > 0) lastCleared = count;
     }
 
     /**
@@ -191,5 +201,39 @@ public class Level : MonoBehaviour
             }
             row++;
         }
+    }
+
+    /**
+     * Calculates the points to award for the given number of lines cleared.
+     * 
+     * @param lines     The number of lines cleared.
+     * @return          The points to award.
+     */
+    private int GetPoints(int lines)
+    {
+        if (lines <= 0)
+        {
+            return 0;
+        }
+
+        // base points
+        int points = (2 * lines) - 1;
+
+        // tetris?
+        if (lines % 4 == 0) points += lines / 4;
+
+        // back-to-back?
+        if (lines >= 4 && lastCleared >= 4)
+        {
+            if (lines < 6)
+            {
+                points = 12;
+            } else
+            {
+                points += ((lines - 4) * 2) - 1;
+            }
+        }
+
+        return points;
     }
 }

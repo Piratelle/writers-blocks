@@ -22,6 +22,9 @@ public class Level : MonoBehaviour
         }
     }
 
+    public AudioSource audioMove;
+    public AudioSource audioLock;
+
     private Tilemap tilemap;
     private Tetromino activePiece;
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();

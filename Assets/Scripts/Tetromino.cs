@@ -242,6 +242,7 @@ public class Tetromino : MonoBehaviour
     private void Lock()
     {
         this.level.Set(this);
+        this.level.audioLock.Play();
         this.level.ClearLines();
         this.level.SpawnPiece();
         this.isLocked = true;
@@ -266,6 +267,7 @@ public class Tetromino : MonoBehaviour
         {
             this.position = newPosition;
             this.lockTime = 0f; // reset lock time if we successfully moved
+            this.level.audioMove.Play();
         }
 
         return isValid;

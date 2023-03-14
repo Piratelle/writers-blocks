@@ -359,19 +359,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tetrominos:
   - shape: 0
-    tile: {fileID: 11400000, guid: 4007328da6859de48911dd102fa962b3, type: 2}
+    tile: {fileID: 11400000, guid: 4e4dbdc8b72bc3340bf0cd46762bd667, type: 2}
   - shape: 1
-    tile: {fileID: 11400000, guid: 3e8c23d23e755a649a8cbc8357300a52, type: 2}
+    tile: {fileID: 11400000, guid: 59a0303f42078e24eb8177d5913b4581, type: 2}
   - shape: 2
-    tile: {fileID: 11400000, guid: 95c5ce76b7428e44d8f327f5721a86e4, type: 2}
+    tile: {fileID: 11400000, guid: c54c9caf7265b704b9b1b382fa5eecbe, type: 2}
   - shape: 3
-    tile: {fileID: 11400000, guid: 4007328da6859de48911dd102fa962b3, type: 2}
+    tile: {fileID: 11400000, guid: 9314c8efa82ecb144993890e0d255023, type: 2}
   - shape: 4
-    tile: {fileID: 11400000, guid: 1280091ddc72ade4cb2ea215e1353702, type: 2}
+    tile: {fileID: 11400000, guid: 034ece7f848578a48b4d21c7129e4ddf, type: 2}
   - shape: 5
-    tile: {fileID: 11400000, guid: 10f82d20ffd14ef4fa4f6357842cab69, type: 2}
+    tile: {fileID: 11400000, guid: 7dbe66509ad3a0e408beefedf3a82e97, type: 2}
   - shape: 6
-    tile: {fileID: 11400000, guid: 1280091ddc72ade4cb2ea215e1353702, type: 2}
+    tile: {fileID: 11400000, guid: 7cfb7b60880db344d8e102b5ddcf9370, type: 2}
   spawnPosition: {x: -1, y: 8, z: 0}
   gridSize: {x: 10, y: 20}
 --- !u!156049354 &517285341
@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 1072979903}
   - component: {fileID: 1072979902}
   m_Layer: 0
-  m_Name: GridGreen
+  m_Name: PaperGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,12 +544,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 686fbefcd4f0d00489b2c146dbd9c4c9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cacd4d6f91a9ed54badb937737309f2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 10, y: 20}
+  m_Size: {x: 10.5, y: 20}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -563,7 +563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072979901}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

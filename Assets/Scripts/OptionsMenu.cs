@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
  * A script to handle the options menu functions.
  * 
  * @author Erin Ratelle
- * References: https://www.youtube.com/watch?v=0E1acACY0Oc, https://www.youtube.com/watch?v=eki-6QBtDAg
+ * References: https://www.youtube.com/watch?v=0E1acACY0Oc
  */
 public class OptionsMenu : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class OptionsMenu : MonoBehaviour
 
     public static void OpenOptions()
     {
-        return; // menu isn't layering correctly - disable this for now
+        //return; // menu isn't layering correctly - disable this for now
         if (isOpen)
         {
             Resume();

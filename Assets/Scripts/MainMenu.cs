@@ -25,6 +25,9 @@ public class MainMenu : MonoBehaviour
         Invoke("ReactivateButtons", initialDelay);
     }
 
+    /**
+     * Activates all buttons.
+     */
     private void ReactivateButtons()
     {
         foreach (var button in buttons)
@@ -42,14 +45,12 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("_Level");
     }
 
+    /**
+     * Pulls up the Options Menu scene.
+     */
     public void OpenOptions()
     {
-
-    }
-
-    public void CloseOptions()
-    {
-
+        OptionsMenu.OpenOptions(); // can't figure out why this isn't layering right!!
     }
 
     /**

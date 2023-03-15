@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 /**
  * A MonoBehaviour class representing the grid of a game level.
@@ -25,10 +27,18 @@ public class Level : MonoBehaviour
     public AudioSource audioMove;
     public AudioSource audioLock;
 
+    public TMP_Text timerText;
+    public TMP_Text scoreText;
+
     private Tilemap tilemap;
     private Tetromino activePiece;
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
     private int lastCleared = 0;
+
+    private static int SCORE = 0;
+    private static int HIGHSCORE;
+    private static float DURATION = 0;
+    private static int HIGHTIME;
 
     /**
      * Called when the scene is loaded.
@@ -36,6 +46,16 @@ public class Level : MonoBehaviour
     private void Awake()
     {
         this.tilemap = GetComponentInChildren<Tilemap>();
+
+        // load player preferences/scores
+        if (PlayerPrefs.HasKey("HighScore"))
+        {
+            HIGHSCORE = PlayerPrefs.GetInt("HighScore");
+        }
+        if (PlayerPrefs.HasKey("HighTime"))
+        {
+            HIGHTIME = PlayerPrefs.GetInt("HighTime");
+        }
     }
 
     /**
@@ -44,6 +64,20 @@ public class Level : MonoBehaviour
     private void Start()
     {
         SpawnPiece();
+    }
+
+    /**
+     * Frame update. 
+     * Handles applicable user input.
+     */
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OptionsMenu.OpenOptions();
+        }
+
+        IncrementTime();
     }
 
     /**
@@ -155,7 +189,8 @@ public class Level : MonoBehaviour
             }
         }
 
-        // points = GetPoints(count);
+        SCORE += GetPoints(count);
+        scoreText.text = string.Format("{0}", SCORE);
         if (count > 0) lastCleared = count;
     }
 
@@ -238,5 +273,17 @@ public class Level : MonoBehaviour
         }
 
         return points;
+    }
+
+    /**
+     * Ticks the play clock, updating the player's best time if necessary.
+     */
+    private void IncrementTime()
+    {
+        DURATION += Time.deltaTime;
+        int d = (int)DURATION;
+        int minutes = d / 60;
+        int seconds = d % 60;
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }

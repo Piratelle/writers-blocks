@@ -243,7 +243,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttons:
   - {fileID: 1033503797}
-  - {fileID: 1990899788}
   - {fileID: 1749792225}
   initialDelay: 6
 --- !u!1 &496806658
@@ -1078,11 +1077,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &1990899788 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3168569139310780663, guid: 4e10969d579b80f42ab3103937648898, type: 3}
-  m_PrefabInstance: {fileID: 1828364444}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2017099266
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ public class OptionsMenu : MonoBehaviour
 
     public static void OpenOptions()
     {
+        return; // menu isn't layering correctly - disable this for now
         if (isOpen)
         {
             Resume();

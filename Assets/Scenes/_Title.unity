@@ -943,6 +943,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Options Button
       objectReference: {fileID: 0}
+    - target: {fileID: 3168569139310780663, guid: 4e10969d579b80f42ab3103937648898, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3168569139863878403, guid: 4e10969d579b80f42ab3103937648898, type: 3}
       propertyPath: m_text
       value: Options

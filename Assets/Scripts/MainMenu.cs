@@ -50,7 +50,7 @@ public class MainMenu : MonoBehaviour
      */
     public void OpenOptions()
     {
-        OptionsMenu.OpenOptions(); // can't figure out why this isn't layering right!!
+        OptionsMenu.OpenOptions();
     }
 
     /**

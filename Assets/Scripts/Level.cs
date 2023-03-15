@@ -28,13 +28,19 @@ public class Level : MonoBehaviour
     public AudioSource audioLock;
     public AudioSource audioScore;
 
+    public float stepDelay = 1f;
+    public float lockDelay = .5f;
+
     public TMP_Text timerText;
     public TMP_Text scoreText;
+    public TMP_Text levelText;
 
     private Tilemap tilemap;
     private Tetromino activePiece;
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
     private int lastCleared = 0;
+    private int gameLevel = 0;
+    private int pointsThisLevel = 0;
 
     private static int _SCORE = 0;
     public static int SCORE
@@ -62,7 +68,9 @@ public class Level : MonoBehaviour
      */
     private void Start()
     {
+        //FillGrid();
         SpawnPiece();
+        LevelUp();
     }
 
     /**
@@ -77,6 +85,27 @@ public class Level : MonoBehaviour
         }
 
         IncrementTime();
+    }
+
+    /**
+     * Debugging assistance method. 
+     * Fills grid with tetrainbinow!
+     */
+    private void FillGrid()
+    {
+        RectInt bounds = this.Bounds;
+        int i = 0;
+        for (int row = bounds.yMin; row < bounds.yMax; row++)
+        {
+            for (int col = bounds.xMin; col < bounds.xMax; col++)
+            {
+                Vector3Int cell = new Vector3Int(col, row, 0);
+                Tetromino.Data data = tetrominos[i];
+                this.tilemap.SetTile(cell, data.tile);
+
+                i = Tetromino.Wrap(i + 1, 0, tetrominos.Length);
+            }
+        }
     }
 
     /**
@@ -188,8 +217,7 @@ public class Level : MonoBehaviour
             }
         }
 
-        SCORE += GetPoints(count);
-        scoreText.text = SCORE.ToString("#,0");
+        IncrementScore(GetPoints(count));
         if (count > 0)
         {
             lastCleared = count; 
@@ -234,7 +262,7 @@ public class Level : MonoBehaviour
         }
 
         // now drop the rows above
-        while (row < bounds.xMax)
+        while (row < bounds.yMax)
         {
             for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
@@ -282,7 +310,7 @@ public class Level : MonoBehaviour
     }
 
     /**
-     * Ticks the play clock, updating the player's best time if necessary.
+     * Handles clock tick.
      */
     private void IncrementTime()
     {
@@ -291,5 +319,31 @@ public class Level : MonoBehaviour
         int minutes = d / 60;
         int seconds = d % 60;
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    /**
+     * Updates game score and level.
+     */
+    private void IncrementScore(int points)
+    {
+        SCORE += points;
+        scoreText.text = SCORE.ToString("#,0");
+
+        pointsThisLevel += points;
+        if (pointsThisLevel / 5 > gameLevel)
+        {
+            LevelUp();
+        }
+    }
+
+    /**
+     * Levels up and increases drop rate.
+     */
+    private void LevelUp()
+    {
+        gameLevel++;
+        pointsThisLevel = 0;
+        levelText.text = "Lvl " + gameLevel;
+        stepDelay = (float)System.Math.Pow(0.8 - (0.007 * (gameLevel - 1)), gameLevel - 1);
     }
 }

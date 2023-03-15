@@ -120,8 +120,6 @@ public class Tetromino : MonoBehaviour
     public Vector3Int[] cells { get; private set; }
     public Vector2Int[,] wallKicks { get; private set; }
     public int rotationIndex { get; private set; }
-    public float stepDelay = 1f; // move to Level?? static??
-    public float lockDelay = .5f; // move to Level?? static??
 
     private float stepTime;
     private float lockTime;
@@ -145,7 +143,7 @@ public class Tetromino : MonoBehaviour
         this.rotationIndex= 0;
         UpdateCells();
 
-        this.stepTime = Time.time + this.stepDelay;
+        this.stepTime = Time.time + this.level.stepDelay;
         this.lockTime = 0f;
     }
 
@@ -228,9 +226,9 @@ public class Tetromino : MonoBehaviour
      */
     private void Step()
     {
-        this.stepTime = Time.time + stepDelay;
+        this.stepTime = Time.time + this.level.stepDelay;
         Move(Vector2Int.down);
-        if (this.lockTime >= this.lockDelay)
+        if (this.lockTime >= this.level.lockDelay)
         {
             Lock();
         }
@@ -340,7 +338,7 @@ public class Tetromino : MonoBehaviour
      * @param max       The exclusive maximum value of the modulo range (typically the divisor).
      * @return          The remainder, as a value that is >= min and < max.
      */
-    private int Wrap(int input, int min, int max)
+    public static int Wrap(int input, int min, int max)
     {
         if (input < min)
         {

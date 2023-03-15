@@ -35,10 +35,18 @@ public class Level : MonoBehaviour
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
     private int lastCleared = 0;
 
-    private static int SCORE = 0;
-    private static int HIGHSCORE;
-    private static float DURATION = 0;
-    private static int HIGHTIME;
+    private static int _SCORE = 0;
+    public static int SCORE
+    {
+        get { return _SCORE; }
+        private set { _SCORE = value; }
+    }
+    private static float _DURATION = 0;
+    public static float DURATION
+    {
+        get { return _DURATION; }
+        private set { _DURATION = value; }
+    }
 
     /**
      * Called when the scene is loaded.
@@ -46,16 +54,6 @@ public class Level : MonoBehaviour
     private void Awake()
     {
         this.tilemap = GetComponentInChildren<Tilemap>();
-
-        // load player preferences/scores
-        if (PlayerPrefs.HasKey("HighScore"))
-        {
-            HIGHSCORE = PlayerPrefs.GetInt("HighScore");
-        }
-        if (PlayerPrefs.HasKey("HighTime"))
-        {
-            HIGHTIME = PlayerPrefs.GetInt("HighTime");
-        }
     }
 
     /**
@@ -106,8 +104,8 @@ public class Level : MonoBehaviour
             Set(this.activePiece);
         } else
         {
-            // GAME OVER
-            this.tilemap.ClearAllTiles(); // placeholder!!
+            //this.tilemap.ClearAllTiles();
+            SceneManager.LoadScene("_GameOver");
         }
     }
 
@@ -190,7 +188,7 @@ public class Level : MonoBehaviour
         }
 
         SCORE += GetPoints(count);
-        scoreText.text = string.Format("{0}", SCORE);
+        scoreText.text = SCORE.ToString("#,0");
         if (count > 0) lastCleared = count;
     }
 

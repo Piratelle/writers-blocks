@@ -222,9 +222,6 @@ public class Level : MonoBehaviour
         {
             lastCleared = count; 
             audioScore.Play();
-        } else
-        {
-            audioLock.Play();
         }
     }
 

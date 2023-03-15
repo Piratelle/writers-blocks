@@ -207,6 +207,7 @@ public class Tetromino : MonoBehaviour
                 {
                     continue;
                 }
+                this.level.audioLock.Play();
                 Lock();
             }
 

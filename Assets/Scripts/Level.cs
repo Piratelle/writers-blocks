@@ -26,6 +26,7 @@ public class Level : MonoBehaviour
 
     public AudioSource audioMove;
     public AudioSource audioLock;
+    public AudioSource audioScore;
 
     public TMP_Text timerText;
     public TMP_Text scoreText;
@@ -189,7 +190,14 @@ public class Level : MonoBehaviour
 
         SCORE += GetPoints(count);
         scoreText.text = SCORE.ToString("#,0");
-        if (count > 0) lastCleared = count;
+        if (count > 0)
+        {
+            lastCleared = count; 
+            audioScore.Play();
+        } else
+        {
+            audioLock.Play();
+        }
     }
 
     /**

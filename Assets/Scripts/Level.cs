@@ -70,6 +70,7 @@ public class Level : MonoBehaviour
     private void Start()
     {
         //FillGrid();
+        DURATION = 0; // reset, since Time.time tracks time of program, not scene!
         SpawnPiece();
         LevelUp();
     }

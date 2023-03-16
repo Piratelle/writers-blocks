@@ -13,6 +13,7 @@ using TMPro;
 public class Level : MonoBehaviour
 {
     public Tetromino.Data[] tetrominos;
+    public AnimatedTile bombTile;
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public Vector2Int gridSize = new Vector2Int(10, 20);
     public RectInt Bounds
@@ -27,9 +28,11 @@ public class Level : MonoBehaviour
     public AudioSource audioMove;
     public AudioSource audioLock;
     public AudioSource audioScore;
+    public AudioSource audioBomb;
 
     public float stepDelay = 1f;
     public float lockDelay = .5f;
+    public float bombChance = 0.05f;
 
     public TMP_Text timerText;
     public TMP_Text scoreText;
@@ -151,7 +154,35 @@ public class Level : MonoBehaviour
         for (int i = 0; i < piece.cells.Length; i++)
         {
             Vector3Int tilePosition = piece.cells[i] + piece.position;
-            this.tilemap.SetTile(tilePosition, piece.data.tile);
+            if (piece.isBomb)
+            {
+                this.tilemap.SetTile(tilePosition, bombTile);
+            } else
+            {
+                this.tilemap.SetTile(tilePosition, piece.data.tile);
+            }
+        }
+
+        if (piece.isBomb && piece.isLocked)
+        {
+            // KABOOM!
+            RectInt bounds = Bounds;
+            for (int i = 0; i < piece.cells.Length; i++)
+            {
+                Vector3Int bombPosition = piece.cells[i] + piece.position;
+                for (int x = bombPosition.x - 1; x <= bombPosition.x + 1; x++)
+                {
+                    for (int y = bombPosition.y - 1; y <= bombPosition.y + 1; y++)
+                    {
+                        Vector3Int tilePosition = new Vector3Int(x, y, bombPosition.z);
+                        if (bounds.Contains((Vector2Int)tilePosition))
+                        {
+                            this.tilemap.SetTile(tilePosition, null);
+                        }
+                    }
+                }
+            }
+            audioBomb.Play();
         }
     }
 

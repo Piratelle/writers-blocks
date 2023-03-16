@@ -120,10 +120,11 @@ public class Tetromino : MonoBehaviour
     public Vector3Int[] cells { get; private set; }
     public Vector2Int[,] wallKicks { get; private set; }
     public int rotationIndex { get; private set; }
+    public bool isBomb { get; private set; }
+    public bool isLocked { get; private set; }
 
     private float stepTime;
     private float lockTime;
-    private bool isLocked = false;
 
     /**
      * MonoBehaviour does not allow constructors - Initialize() fulfills that functionality.
@@ -137,6 +138,7 @@ public class Tetromino : MonoBehaviour
         this.level = level;
         this.position = position;
         this.data = data;
+        this.isBomb = (Random.value < this.level.bombChance);
 
         this.wallKicks = WallKicks[this.data.shape];
 
@@ -207,7 +209,6 @@ public class Tetromino : MonoBehaviour
                 {
                     continue;
                 }
-                this.level.audioLock.Play();
                 Lock();
             }
 
@@ -240,10 +241,11 @@ public class Tetromino : MonoBehaviour
      */
     private void Lock()
     {
+        this.level.audioLock.Play();
+        this.isLocked = true;
         this.level.Set(this);
         this.level.ClearLines();
         this.level.SpawnPiece();
-        this.isLocked = true;
     }
 
     /**

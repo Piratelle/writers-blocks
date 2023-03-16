@@ -375,6 +375,7 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 7dbe66509ad3a0e408beefedf3a82e97, type: 2}
   - shape: 6
     tile: {fileID: 11400000, guid: 7cfb7b60880db344d8e102b5ddcf9370, type: 2}
+  bombTile: {fileID: 11400000, guid: 22a6c1edc9b2c67429c57458fb5f8f4a, type: 2}
   spawnPosition: {x: -1, y: 8, z: 0}
   gridSize: {x: 10, y: 20}
   audioMove: {fileID: 517285344}
@@ -382,6 +383,7 @@ MonoBehaviour:
   audioScore: {fileID: 517285345}
   stepDelay: 1
   lockDelay: 0.5
+  bombChance: 0.05
   timerText: {fileID: 2042133905}
   scoreText: {fileID: 1675663449}
   levelText: {fileID: 1745836565}
@@ -424,7 +426,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -520,7 +522,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -616,7 +618,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 724131bc8a7f34041bb9f1701f0cb58d, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

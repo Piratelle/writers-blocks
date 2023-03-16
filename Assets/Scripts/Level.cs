@@ -61,6 +61,7 @@ public class Level : MonoBehaviour
     private void Awake()
     {
         this.tilemap = GetComponentInChildren<Tilemap>();
+        OptionsMenu.EnableKeys(); // make sure at least standard keys are enabled!
     }
 
     /**
@@ -79,9 +80,9 @@ public class Level : MonoBehaviour
      */
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F1))
+        if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Pause))
         {
-            OptionsMenu.OpenOptions();
+            PauseMenu.OpenPause();
         }
 
         IncrementTime();

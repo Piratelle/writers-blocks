@@ -176,32 +176,32 @@ public class Tetromino : MonoBehaviour
             this.lockTime += Time.deltaTime;
 
             // attempt user-prompted rotations 
-            if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Counterclockwise))
             {
                 Rotate(-1);
             }
-            else if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.UpArrow))
+            else if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Clockwise))
             {
                 Rotate(1);
             }
 
             // attempt user-prompted motion
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Left))
             {
                 Move(Vector2Int.left);
             }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            else if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Right))
             {
                 Move(Vector2Int.right);
             }
 
-            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Down))
             {
                 Move(Vector2Int.down);
             }
 
             // attempt user-prompted hard drop
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.HardDrop))
             {
                 while (Move(Vector2Int.down))
                 {

@@ -138,7 +138,7 @@ public class Tetromino : MonoBehaviour
         this.level = level;
         this.position = position;
         this.data = data;
-        this.isBomb = (Random.value < this.level.bombChance);
+        this.isBomb = PlayerPrefs.HasKey("BombBlocks") && (Random.value < this.level.bombChance);
 
         this.wallKicks = WallKicks[this.data.shape];
 

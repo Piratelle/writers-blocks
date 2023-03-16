@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 /**
  * A script to handle the options menu functions.
@@ -15,7 +16,8 @@ public class OptionsMenu : MonoBehaviour
     public static OptionsMenu SCENE = null; // Because this scene is loaded additively, we need to track its state to modify behavior.
     private static Dictionary<MoveAction, List<KeyCode>> KEYS = new Dictionary<MoveAction, List<KeyCode>>();
 
-    public Toggle wasdToggle, numsToggle;
+    public TMP_Dropdown leveling;
+    public Toggle wasdToggle, numsToggle, bombToggle;
 
     /**
      * Standard Tetris Moves/Actions
@@ -42,6 +44,33 @@ public class OptionsMenu : MonoBehaviour
         // learn player settings
         wasdToggle.isOn = PlayerPrefs.HasKey("WASD");
         numsToggle.isOn = PlayerPrefs.HasKey("NumKeys");
+        bombToggle.isOn = PlayerPrefs.HasKey("BombBlocks");
+
+        if (!PlayerPrefs.HasKey("Leveling"))
+        {
+            leveling.value = 0;
+        } else
+        {
+            string levelMode = PlayerPrefs.GetString("Leveling");
+            for (int i = 0; i < leveling.options.Count; i++)
+            {
+                if (leveling.options[i].text == levelMode + " Goal")
+                {
+                    leveling.value = i;
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * We can't be sure that a user will open Options before playing, 
+     * so this function initializes all the default settings.
+     */
+    public static void Initialize()
+    {
+        EnableKeys();
+        if (!PlayerPrefs.HasKey("Leveling")) PlayerPrefs.SetString("Leveling", "Variable");
     }
 
     /**
@@ -131,7 +160,18 @@ public class OptionsMenu : MonoBehaviour
             PlayerPrefs.DeleteKey("NumKeys");
         }
 
-        EnableKeys();
+        if (bombToggle.isOn)
+        {
+            PlayerPrefs.SetString("BombBlocks", "Enabled");
+        }
+        else
+        {
+            PlayerPrefs.DeleteKey("BombBlocks");
+        }
+
+        PlayerPrefs.SetString("Leveling", leveling.options[leveling.value].text.Replace(" Goal", ""));
+
+        Initialize();
     }
 
     /**

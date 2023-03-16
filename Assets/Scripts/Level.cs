@@ -64,7 +64,7 @@ public class Level : MonoBehaviour
     private void Awake()
     {
         this.tilemap = GetComponentInChildren<Tilemap>();
-        OptionsMenu.EnableKeys(); // make sure at least standard keys are enabled!
+        OptionsMenu.Initialize(); // enables default/player-preference settings
     }
 
     /**
@@ -360,7 +360,9 @@ public class Level : MonoBehaviour
         scoreText.text = SCORE.ToString("#,0");
 
         pointsThisLevel += points;
-        if (pointsThisLevel / 5 > gameLevel)
+
+        string levelMode = PlayerPrefs.GetString("Leveling");
+        if ((pointsThisLevel / 5 > gameLevel) || ((levelMode == "Fixed") && (pointsThisLevel >= 10)))
         {
             LevelUp();
         }

@@ -15,6 +15,14 @@ public class Level : MonoBehaviour
     public Tetromino.Data[] tetrominos;
     public AnimatedTile bombTile;
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
+    public Vector3Int NextPosition
+    {
+        get
+        {
+            Vector3Int translation = new Vector3Int((gridSize.x / 2) + 6, -1, 0);
+            return spawnPosition + translation;
+        }
+    }
     public Vector2Int gridSize = new Vector2Int(10, 20);
     public RectInt Bounds
     {
@@ -40,6 +48,7 @@ public class Level : MonoBehaviour
 
     private Tilemap tilemap;
     private Tetromino activePiece;
+    private Tetromino nextPiece;
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
     private int lastCleared = 0;
     private int gameLevel = 0;
@@ -118,6 +127,32 @@ public class Level : MonoBehaviour
      */
     public void SpawnPiece()
     {
+        if (this.nextPiece == null)
+        {
+            this.nextPiece = GetNextPiece();
+        } else
+        {
+            this.Clear(this.nextPiece);
+        }
+
+        this.activePiece = this.nextPiece;
+        this.nextPiece = GetNextPiece();
+        this.activePiece.Activate(this.spawnPosition, false);
+        this.nextPiece.Activate(this.NextPosition, true);
+        Set(this.nextPiece);
+
+        if (IsValidPosition(this.activePiece, this.spawnPosition))
+        {
+            Set(this.activePiece);
+        } else
+        {
+            //this.tilemap.ClearAllTiles();
+            SceneManager.LoadScene("_GameOver");
+        }
+    }
+
+    public Tetromino GetNextPiece()
+    {
         // avoid too many repeats by using "7-bag" technique
         if (tetrominoBag.Count == 0)
         {
@@ -131,17 +166,9 @@ public class Level : MonoBehaviour
         Tetromino.Data data = tetrominoBag[random];
         tetrominoBag.RemoveAt(random);
 
-        this.activePiece = gameObject.AddComponent<Tetromino>() as Tetromino;
-        this.activePiece.Initialize(this, this.spawnPosition, data);
-
-        if (IsValidPosition(this.activePiece, this.spawnPosition))
-        {
-            Set(this.activePiece);
-        } else
-        {
-            //this.tilemap.ClearAllTiles();
-            SceneManager.LoadScene("_GameOver");
-        }
+        Tetromino piece = gameObject.AddComponent<Tetromino>() as Tetromino;
+        piece.Initialize(this, data);
+        return piece;
     }
 
     /**

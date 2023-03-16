@@ -126,23 +126,34 @@ public class Tetromino : MonoBehaviour
     private float stepTime;
     private float lockTime;
 
+    private static bool HARD_DROPPED = false;
+
     /**
      * MonoBehaviour does not allow constructors - Initialize() fulfills that functionality.
      * 
      * @param level     The level/board where this piece is being initialized.
-     * @param position  The starting position where this piece is being initialized.
      * @param data      The Tetromino keys to use when initializing this piece.
      */
-    public void Initialize(Level level, Vector3Int position, Data data)
+    public void Initialize(Level level, Data data)
     {
         this.level = level;
-        this.position = position;
         this.data = data;
         this.isBomb = PlayerPrefs.HasKey("BombBlocks") && (Random.value < this.level.bombChance);
-
         this.wallKicks = WallKicks[this.data.shape];
+    }
 
-        this.rotationIndex= 0;
+    /**
+     * Handles position and state specific initialization.
+     * 
+     * @param position  The starting position where this piece is being initialized.
+     * @param locked    The locked state of the Tetromino (so that it doesn't move unless we want it to!)
+     */
+    public void Activate(Vector3Int position, bool locked)
+    {
+        this.position = position;
+        this.isLocked = locked;
+
+        this.rotationIndex = 0;
         UpdateCells();
 
         this.stepTime = Time.time + this.level.stepDelay;
@@ -203,13 +214,18 @@ public class Tetromino : MonoBehaviour
             }
 
             // attempt user-prompted hard drop
-            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.HardDrop))
+            // static boolean prevents instand hard drop when piece switches over (at least one Update must occur between hard drops)
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.HardDrop) && !HARD_DROPPED)
             {
                 while (Move(Vector2Int.down))
                 {
                     continue;
                 }
                 Lock();
+                HARD_DROPPED = true;
+            } else
+            {
+                HARD_DROPPED = false;
             }
 
             // perform time-based drop, check for lock condition

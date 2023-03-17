@@ -45,6 +45,7 @@ public class Level : MonoBehaviour
     public AudioSource audioLock;
     public AudioSource audioScore;
     public AudioSource audioBomb;
+    public AudioSource audioTick;
 
     public float stepDelay = 1f;
     public float lockDelay = .5f;
@@ -187,6 +188,7 @@ public class Level : MonoBehaviour
         if (IsValidPosition(this.activePiece, this.spawnPosition))
         {
             Set(this.activePiece);
+            audioMove.Play();
         }
         else
         {
@@ -241,26 +243,29 @@ public class Level : MonoBehaviour
             }
         }
 
-        if (piece.isBomb && piece.isLocked)
+        if (piece == this.activePiece)
         {
-            // KABOOM!
-            RectInt bounds = Bounds;
-            for (int i = 0; i < piece.cells.Length; i++)
+            if (piece.isBomb && piece.isLocked)
             {
-                Vector3Int bombPosition = piece.cells[i] + piece.position;
-                for (int x = bombPosition.x - 1; x <= bombPosition.x + 1; x++)
+                // KABOOM!
+                RectInt bounds = Bounds;
+                for (int i = 0; i < piece.cells.Length; i++)
                 {
-                    for (int y = bombPosition.y - 1; y <= bombPosition.y + 1; y++)
+                    Vector3Int bombPosition = piece.cells[i] + piece.position;
+                    for (int x = bombPosition.x - 1; x <= bombPosition.x + 1; x++)
                     {
-                        Vector3Int tilePosition = new Vector3Int(x, y, bombPosition.z);
-                        if (bounds.Contains((Vector2Int)tilePosition))
+                        for (int y = bombPosition.y - 1; y <= bombPosition.y + 1; y++)
                         {
-                            this.tilemap.SetTile(tilePosition, null);
+                            Vector3Int tilePosition = new Vector3Int(x, y, bombPosition.z);
+                            if (bounds.Contains((Vector2Int)tilePosition))
+                            {
+                                this.tilemap.SetTile(tilePosition, null);
+                            }
                         }
                     }
                 }
+                audioBomb.Play();
             }
-            audioBomb.Play();
         }
     }
 

@@ -262,6 +262,7 @@ public class Tetromino : MonoBehaviour
     {
         this.stepTime = Time.time + this.level.stepDelay;
         Move(Vector2Int.down);
+        if (this.isBomb) this.level.audioTick.Play();
         if (this.lockTime >= this.level.lockDelay)
         {
             Lock();

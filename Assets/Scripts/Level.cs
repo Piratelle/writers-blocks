@@ -23,6 +23,14 @@ public class Level : MonoBehaviour
             return spawnPosition + translation;
         }
     }
+    public Vector3Int HoldPosition
+    {
+        get
+        {
+            Vector3Int translation = new Vector3Int((gridSize.x / 2) + 6, -4, 0);
+            return spawnPosition + translation;
+        }
+    }
     public Vector2Int gridSize = new Vector2Int(10, 20);
     public RectInt Bounds
     {
@@ -49,6 +57,7 @@ public class Level : MonoBehaviour
     private Tilemap tilemap;
     private Tetromino activePiece;
     private Tetromino nextPiece;
+    private Tetromino heldPiece;
     private List<Tetromino.Data> tetrominoBag = new List<Tetromino.Data> ();
     private int lastCleared = 0;
     private int gameLevel = 0;
@@ -136,24 +145,17 @@ public class Level : MonoBehaviour
         }
 
         this.activePiece = this.nextPiece;
-        this.nextPiece = GetNextPiece();
-        this.activePiece.Activate(this.spawnPosition, false);
-        this.nextPiece.Activate(this.NextPosition, true);
-        Set(this.nextPiece);
-
-        if (IsValidPosition(this.activePiece, this.spawnPosition))
-        {
-            Set(this.activePiece);
-        } else
-        {
-            //this.tilemap.ClearAllTiles();
-            SceneManager.LoadScene("_GameOver");
-        }
+        SetNext();
+        SetActive();
     }
 
-    public Tetromino GetNextPiece()
+    /**
+     * Generates a new Tetromino using the "7-bag" technique to minimize repetition.
+     * 
+     * @return      The next Tetromino to be activated.
+     */
+    private Tetromino GetNextPiece()
     {
-        // avoid too many repeats by using "7-bag" technique
         if (tetrominoBag.Count == 0)
         {
             for (int i = 0; i < tetrominos.Length; i++)
@@ -169,6 +171,55 @@ public class Level : MonoBehaviour
         Tetromino piece = gameObject.AddComponent<Tetromino>() as Tetromino;
         piece.Initialize(this, data);
         return piece;
+    }
+
+    private void SetNext()
+    {
+        this.nextPiece = GetNextPiece();
+        this.nextPiece.Activate(this.NextPosition, true);
+        Set(this.nextPiece);
+    }
+
+    private void SetActive()
+    {
+        this.activePiece.Activate(this.spawnPosition, false);
+
+        if (IsValidPosition(this.activePiece, this.spawnPosition))
+        {
+            Set(this.activePiece);
+        }
+        else
+        {
+            //this.tilemap.ClearAllTiles();
+            SceneManager.LoadScene("_GameOver");
+        }
+    }
+
+    /**
+     * Banks the currently active piece, swapping to the previously banked piece or activating the next piece as needed.
+     */
+    public void HoldPiece()
+    {
+        // if we have a currently held piece, save it and clear it from the board
+        Tetromino swap = this.heldPiece;
+        if (swap != null) this.Clear(swap);
+
+        // move our active piece into the held position
+        this.heldPiece = this.activePiece;
+        this.heldPiece.Activate(this.HoldPosition, true);
+        Set(this.heldPiece);
+
+        // need to activate formerly held piece, or next piece if it was null
+        if (swap == null)
+        {
+            this.Clear(this.nextPiece);
+            this.activePiece = this.nextPiece;
+            SetNext();
+        } else
+        {
+            this.activePiece = swap;
+        }
+        SetActive();
     }
 
     /**

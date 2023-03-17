@@ -122,11 +122,13 @@ public class Tetromino : MonoBehaviour
     public int rotationIndex { get; private set; }
     public bool isBomb { get; private set; }
     public bool isLocked { get; private set; }
+    public bool wasHeld { get; private set; }
 
     private float stepTime;
     private float lockTime;
 
     private static bool HARD_DROPPED = false;
+    private static bool HELD = false;
 
     /**
      * MonoBehaviour does not allow constructors - Initialize() fulfills that functionality.
@@ -139,6 +141,7 @@ public class Tetromino : MonoBehaviour
         this.level = level;
         this.data = data;
         this.isBomb = PlayerPrefs.HasKey("BombBlocks") && (Random.value < this.level.bombChance);
+        this.wasHeld = false;
         this.wallKicks = WallKicks[this.data.shape];
     }
 
@@ -187,6 +190,19 @@ public class Tetromino : MonoBehaviour
 
             // increment lock time (will be reset if move succeeds)
             this.lockTime += Time.deltaTime;
+
+            // check for user-prompted hold
+            // static boolean prevents instant hold when piece switches over (at least one Update must occur between holds)
+            if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Hold) && !HELD && !this.wasHeld)
+            {
+                this.level.HoldPiece();
+                HELD = true;
+                this.wasHeld = true; // each piece can be held only once!
+            }
+            else
+            {
+                HELD = false;
+            }
 
             // attempt user-prompted rotations 
             if (OptionsMenu.CheckMove(OptionsMenu.MoveAction.Counterclockwise))
